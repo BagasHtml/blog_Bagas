@@ -1,69 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bagas-Blog</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="icon" href="anime.jpg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bagas-Blog</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="icon" href="anime.jpg">
 </head>
 <body>
-        <div class="div-container">
-          <ul>
-            <div class="avatar-container">
-              <img src="senang.gif" alt="poto propil" class="status-avatar">
-              <span class="status-indicator"></span>
-            </div>
-            <p class="status-text">Online</p>
-      
-            <h1>Halo cuy</h1>
-            <h1>Bukan Developer cuma pelajar.</h1>
-            <ul>
-              <a href="about me.html">
-                <li class="li-container"><i class="bi bi-person-circle"></i> ABOUT ME</li>
-              </a>
-              <a href="projek.html">
-                <li class="li-container"><i class="bi bi-folder"></i> MY PROJECT</li>
-              </a>
-              <a href="contact me.html">
-                <li class="li-container"><i class="bi bi-envelope"></i> MEDIA SOSIAL</li>
-              </a>
-              <a href="https://saweria.co/Bagastresna">
-                <li class="li-container"><i class="bi bi-cash-stack"></i> KALO ADA YANG MAU JAJANIN BOLEH BGT! :V</li>
-              </a>
-            </ul>
-          </ul>
-      
-          <div class="footer">
-            <p align="center">&copy;Bagas Tresna Nanda MS</p>
-          </div>
-        </div>      
-    <script>
+  <div class="div-container">
+    <ul>
+      <div class="avatar-container">
+        <img src="senang.gif" alt="poto propil" class="status-avatar">
+        <span class="status-indicator"></span>
+      </div>
+      <p class="status-text">Online</p>
+
+      <h1>Halo cuy</h1>
+      <h1>Bukan Developer cuma pelajar.</h1>
+      <ul>
+        <a href="about me.html">
+          <li class="li-container">ABOUT ME</li>
+        </a>
+        <a href="projek.html">
+          <li class="li-container">MY PROJECT</li>
+        </a>
+        <a href="contact me.html">
+          <li class="li-container">MEDIA SOSIAL</li>
+        </a>
+        <a href="https://saweria.co/Bagastresna">
+          <li class="li-container">KALO ADA YANG MAU JAJANIN BOLEH BGT! :V</li>
+        </a>
+      </ul>
+    </ul>
+
+    <div class="footer">
+      <p align="center">&copy;Bagas Tresna Nanda MS</p>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAMS347fmtXsz67FpLCR1hFRRvqmNKdUGU",
+      authDomain: "blog-bagas.firebaseapp.com",
+      projectId: "blog-bagas",
+      storageBucket: "blog-bagas.firebasestorage.app",
+      messagingSenderId: "9964829835",
+      appId: "1:9964829835:web:13533f0e76c528253d688e",
+      measurementId: "G-0ER7F922G5"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     const statusText = document.querySelector(".status-text");
     const statusCircle = document.querySelector(".status-indicator");
     const profileImage = document.querySelector(".status-avatar");
+    const userId = "bagas";
 
-    function updateStatus() {
-        if (navigator.onLine) {
-            statusText.textContent = "🟢 online";
-            statusText.style.color = "#90ee90";
-            statusCircle.style.backgroundColor = "#4CAF50";
-            profileImage.src = "senang.gif";
-        } else {
-            statusText.textContent = "🔴 offline";
-            statusText.style.color = "#ff7b7b";
-            statusCircle.style.backgroundColor = "red";
-            profileImage.src = "tidrur.webp";
-        }
+    function setStatus(isOnline) {
+      db.ref("status/" + userId).set({
+        online: isOnline,
+        timestamp: Date.now()
+      });
     }
 
-    window.addEventListener('online', updateStatus);
-    window.addEventListener('offline', updateStatus);
-    updateStatus();
-</script>
+    function updateStatusLocal() {
+      if (navigator.onLine) {
+        statusText.textContent = "🟢 online";
+        statusText.style.color = "#90ee90";
+        statusCircle.style.backgroundColor = "#4CAF50";
+        profileImage.src = "senang.gif";
+        setStatus(true);
+      } else {
+        statusText.textContent = "🔴 offline";
+        statusText.style.color = "#ff7b7b";
+        statusCircle.style.backgroundColor = "red";
+        profileImage.src = "tidrur.webp";
+        setStatus(false);
+      }
+    }
 
-    </script>   
+    window.addEventListener('online', updateStatusLocal);
+    window.addEventListener('offline', updateStatusLocal);
+    updateStatusLocal();
+
+    db.ref("status/" + userId).on("value", (snapshot) => {
+      const data = snapshot.val();
+      if (data && !navigator.onLine) {
+        if (data.online) {
+          statusText.textContent = "🟢 (dari server)";
+          statusText.style.color = "#90ee90";
+          statusCircle.style.backgroundColor = "#4CAF50";
+        } else {
+          statusText.textContent = "🔴 (dari server)";
+          statusText.style.color = "#ff7b7b";
+          statusCircle.style.backgroundColor = "red";
+        }
+      }
+    });
+  </script>
 </body>
 </html>
