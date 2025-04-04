@@ -41,34 +41,39 @@
     </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAMS347fmtXsz67FpLCR1hFRRvqmNKdUGU",
       authDomain: "blog-bagas.firebaseapp.com",
       projectId: "blog-bagas",
-      storageBucket: "blog-bagas.firebasestorage.app",
+      storageBucket: "blog-bagas.appspot.com",
       messagingSenderId: "9964829835",
       appId: "1:9964829835:web:13533f0e76c528253d688e",
-      measurementId: "G-0ER7F922G5"
+      measurementId: "G-0ER7F922G5",
+      databaseURL: "https://blog-bagas-default-rtdb.firebaseio.com" // ← tambahkan ini!
     };
-
+  
+    // Inisialisasi Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
-    const statusText = document.querySelector(".status-text");
-    const statusCircle = document.querySelector(".status-indicator");
-    const profileImage = document.querySelector(".status-avatar");
-    const userId = "bagas";
-
+  
+    const userId = "bagas-laptop"; // ganti sesuai device
     function setStatus(isOnline) {
       db.ref("status/" + userId).set({
         online: isOnline,
         timestamp: Date.now()
       });
     }
+  
+    window.addEventListener('online', () => setStatus(true));
+    window.addEventListener('offline', () => setStatus(false));
+  
+    // Set status awal
+    setStatus(navigator.onLine);
+  
 
     function updateStatusLocal() {
       if (navigator.onLine === true) {
