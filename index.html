@@ -11,39 +11,39 @@
 </head>
 <body>
   <div class="div-container">
-    <ul>
-      <div class="avatar-container">
-        <img src="senang.gif" alt="poto propil" class="status-avatar">
-        <span class="status-indicator"></span>
-      </div>
-      <p class="status-text">Online</p>
+    <div class="avatar-container">
+      <img src="senang.gif" alt="poto propil" class="status-avatar">
+      <span class="status-indicator"></span>
+    </div>
+    <p class="status-text">Online</p>
 
-      <h1>Halo cuy</h1>
-      <h1>Bukan Developer cuma pelajar.</h1>
-      <ul>
-        <a href="about me.html">
-          <li class="li-container">ABOUT ME</li>
-        </a>
-        <a href="projek.html">
-          <li class="li-container">MY PROJECT</li>
-        </a>
-        <a href="contact me.html">
-          <li class="li-container">MEDIA SOSIAL</li>
-        </a>
-        <a href="https://saweria.co/Bagastresna">
-          <li class="li-container">KALO ADA YANG MAU JAJANIN BOLEH BGT! :V</li>
-        </a>
-      </ul>
+    <h1>Halo cuy</h1>
+    <h1>Bukan Developer cuma pelajar.</h1>
+
+    <ul>
+      <a href="about me.html">
+        <li class="li-container">ABOUT ME</li>
+      </a>
+      <a href="projek.html">
+        <li class="li-container">MY PROJECT</li>
+      </a>
+      <a href="contact me.html">
+        <li class="li-container">MEDIA SOSIAL</li>
+      </a>
+      <a href="https://saweria.co/Bagastresna">
+        <li class="li-container">KALO ADA YANG MAU JAJANIN BOLEH BGT! :V</li>
+      </a>
     </ul>
 
     <div class="footer">
-      <p align="center">&copy;Bagas Tresna Nanda MS</p>
+      <p align="center">&copy; Bagas Tresna Nanda MS</p>
     </div>
   </div>
 
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAMS347fmtXsz67FpLCR1hFRRvqmNKdUGU",
@@ -53,36 +53,32 @@
       messagingSenderId: "9964829835",
       appId: "1:9964829835:web:13533f0e76c528253d688e",
       measurementId: "G-0ER7F922G5",
-      databaseURL: "https://blog-bagas-default-rtdb.firebaseio.com" // ← tambahkan ini!
+      databaseURL: "https://blog-bagas-default-rtdb.firebaseio.com"
     };
-  
-    // Inisialisasi Firebase
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-  
-    const userId = "bagas-laptop"; // ganti sesuai device
+
+    const userId = "bagas-laptop";
+    const statusText = document.querySelector(".status-text");
+    const statusCircle = document.querySelector(".status-indicator");
+    const profileImage = document.querySelector(".status-avatar");
+
     function setStatus(isOnline) {
       db.ref("status/" + userId).set({
         online: isOnline,
         timestamp: Date.now()
       });
     }
-  
-    window.addEventListener('online', () => setStatus(true));
-    window.addEventListener('offline', () => setStatus(false));
-  
-    // Set status awal
-    setStatus(navigator.onLine);
-  
 
     function updateStatusLocal() {
-      if (navigator.onLine === true) {
+      if (navigator.onLine) {
         statusText.textContent = "🟢 online";
         statusText.style.color = "#90ee90";
         statusCircle.style.backgroundColor = "#4CAF50";
         profileImage.src = "senang.gif";
         setStatus(true);
-      } else if (navigator.onLine === false) {
+      } else {
         statusText.textContent = "🔴 offline";
         statusText.style.color = "#ff7b7b";
         statusCircle.style.backgroundColor = "red";
@@ -97,8 +93,8 @@
 
     db.ref("status/" + userId).on("value", (snapshot) => {
       const data = snapshot.val();
-      if (data && navigator.onLine === false) {
-        if (data.online === true) {
+      if (data && !navigator.onLine) {
+        if (data.online) {
           statusText.textContent = "🟢 (server)";
           statusText.style.color = "#90ee90";
           statusCircle.style.backgroundColor = "#4CAF50";
