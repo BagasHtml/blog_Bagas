@@ -61,7 +61,9 @@
 
     const statusText = document.querySelector(".status-text");
     const statusCircle = document.querySelector(".status-indicator");
-    const statusRef = db.ref("status/");
+
+    const userId = "bagas-hp"; // Ganti ini sesuai perangkat: contoh "bagas-laptop", "bagas-hp"
+    const statusRef = db.ref("status/" + userId);
 
     function setStatus(isOnline) {
       statusRef.set({
@@ -69,7 +71,6 @@
         timestamp: Date.now()
       });
 
-      // ini yang penting untuk deteksi tab keluar / device mati
       statusRef.onDisconnect().set({
         online: false,
         timestamp: Date.now()
@@ -77,8 +78,16 @@
     }
 
     function tampilStatus(snapshot) {
-      const data = snapshot.val();
-      if (data && data.online) {
+      let adaYangOnline = false;
+
+      snapshot.forEach(child => {
+        const data = child.val();
+        if (data && data.online) {
+          adaYangOnline = true;
+        }
+      });
+
+      if (adaYangOnline) {
         statusText.textContent = "🟢 Online";
         statusText.style.color = "#90ee90";
         statusCircle.style.backgroundColor = "#4CAF50";
@@ -89,7 +98,7 @@
       }
     }
 
-    statusRef.on("value", tampilStatus);
+    db.ref("status/").on("value", tampilStatus);
 
     function updateStatusLocal() {
       setStatus(navigator.onLine);
