@@ -13,9 +13,9 @@
   <div class="div-container">
     <div class="avatar-container">
       <img src="senang.gif" alt="poto propil" class="status-avatar">
-      <span class="status-indicator"></span>
+      <span class="status-indicator" style="background-color: #4CAF50;"></span>
     </div>
-    <p class="status-text">Online</p>
+    <p class="status-text">🟢 Online</p>
 
     <h1>Halo cuy</h1>
     <h1>Bukan Developer cuma pelajar.</h1>
@@ -55,48 +55,47 @@
       measurementId: "G-0ER7F922G5",
       databaseURL: "https://blog-bagas-default-rtdb.firebaseio.com"
     };
-
+  
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
+  
     const statusText = document.querySelector(".status-text");
     const statusCircle = document.querySelector(".status-indicator");
-    const profileImage = document.querySelector(".status-avatar");
-
-    // Buat ID unik untuk masing-masing device (disimpan di localStorage)
-    let userId = localStorage.getItem("userId");
-    if (!userId) {
-      const randomId = Math.random().toString(36).substring(2, 8);
-      userId = "user-" + randomId;
-      localStorage.setItem("userId", userId);
-    }
-
+  
+    // Fungsi update status ke Firebase (hanya kamu yang bisa)
     function setStatus(isOnline) {
-      db.ref("status/" + userId).set({
+      db.ref("status/").set({
         online: isOnline,
         timestamp: Date.now()
       });
     }
-
-    function updateStatusLocal() {
-      if (navigator.onLine) {
-        statusText.textContent = `🟢 ${userId} online`;
+  
+    // Fungsi tampilkan status dari Firebase (bisa dilihat semua orang)
+    function tampilStatus(snapshot) {
+      const data = snapshot.val();
+      if (data && data.online) {
+        statusText.textContent = "🟢 Online";
         statusText.style.color = "#90ee90";
         statusCircle.style.backgroundColor = "#4CAF50";
-        profileImage.src = "senang.gif";
-        setStatus(true);
       } else {
-        statusText.textContent = `🔴 ${userId} offline`;
+        statusText.textContent = "🔴 Offline";
         statusText.style.color = "#ff7b7b";
         statusCircle.style.backgroundColor = "red";
-        profileImage.src = "tidrur.webp";
-        setStatus(false);
       }
     }
-
-    window.addEventListener('online', updateStatusLocal);
-    window.addEventListener('offline', updateStatusLocal);
+  
+    // Dengarkan perubahan data status dari Firebase
+    db.ref("status/").on("value", tampilStatus);
+  
+    // Saat perangkat kamu online/offline, update status ke Firebase
+    function updateStatusLocal() {
+      setStatus(navigator.onLine);
+    }
+  
+    window.addEventListener("online", updateStatusLocal);
+    window.addEventListener("offline", updateStatusLocal);
     updateStatusLocal();
   </script>
+  
 </body>
 </html>
