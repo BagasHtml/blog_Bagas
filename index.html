@@ -59,10 +59,17 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const userId = "bagas-laptop";
     const statusText = document.querySelector(".status-text");
     const statusCircle = document.querySelector(".status-indicator");
     const profileImage = document.querySelector(".status-avatar");
+
+    // Buat ID unik untuk masing-masing device (disimpan di localStorage)
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      const randomId = Math.random().toString(36).substring(2, 8);
+      userId = "user-" + randomId;
+      localStorage.setItem("userId", userId);
+    }
 
     function setStatus(isOnline) {
       db.ref("status/" + userId).set({
@@ -73,13 +80,13 @@
 
     function updateStatusLocal() {
       if (navigator.onLine) {
-        statusText.textContent = "🟢 online";
+        statusText.textContent = `🟢 ${userId} online`;
         statusText.style.color = "#90ee90";
         statusCircle.style.backgroundColor = "#4CAF50";
         profileImage.src = "senang.gif";
         setStatus(true);
       } else {
-        statusText.textContent = "🔴 offline";
+        statusText.textContent = `🔴 ${userId} offline`;
         statusText.style.color = "#ff7b7b";
         statusCircle.style.backgroundColor = "red";
         profileImage.src = "tidrur.webp";
@@ -90,21 +97,6 @@
     window.addEventListener('online', updateStatusLocal);
     window.addEventListener('offline', updateStatusLocal);
     updateStatusLocal();
-
-    db.ref("status/" + userId).on("value", (snapshot) => {
-      const data = snapshot.val();
-      if (data && !navigator.onLine) {
-        if (data.online) {
-          statusText.textContent = "🟢 (server)";
-          statusText.style.color = "#90ee90";
-          statusCircle.style.backgroundColor = "#4CAF50";
-        } else {
-          statusText.textContent = "🔴 (server)";
-          statusText.style.color = "#ff7b7b";
-          statusCircle.style.backgroundColor = "red";
-        }
-      }
-    });
   </script>
 </body>
 </html>
