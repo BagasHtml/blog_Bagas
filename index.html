@@ -55,22 +55,27 @@
       measurementId: "G-0ER7F922G5",
       databaseURL: "https://blog-bagas-default-rtdb.firebaseio.com"
     };
-  
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-  
+
     const statusText = document.querySelector(".status-text");
     const statusCircle = document.querySelector(".status-indicator");
-  
-    // Fungsi update status ke Firebase (hanya kamu yang bisa)
+    const statusRef = db.ref("status/");
+
     function setStatus(isOnline) {
-      db.ref("status/").set({
+      statusRef.set({
         online: isOnline,
         timestamp: Date.now()
       });
+
+      // ini yang penting untuk deteksi tab keluar / device mati
+      statusRef.onDisconnect().set({
+        online: false,
+        timestamp: Date.now()
+      });
     }
-  
-    // Fungsi tampilkan status dari Firebase (bisa dilihat semua orang)
+
     function tampilStatus(snapshot) {
       const data = snapshot.val();
       if (data && data.online) {
@@ -83,19 +88,17 @@
         statusCircle.style.backgroundColor = "red";
       }
     }
-  
-    // Dengarkan perubahan data status dari Firebase
-    db.ref("status/").on("value", tampilStatus);
-  
-    // Saat perangkat kamu online/offline, update status ke Firebase
+
+    statusRef.on("value", tampilStatus);
+
     function updateStatusLocal() {
       setStatus(navigator.onLine);
     }
-  
+
     window.addEventListener("online", updateStatusLocal);
     window.addEventListener("offline", updateStatusLocal);
     updateStatusLocal();
   </script>
-  
+
 </body>
 </html>
