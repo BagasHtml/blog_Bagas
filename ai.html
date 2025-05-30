@@ -1,337 +1,232 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chatbot</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    padding: 20px;
-  }
-  #chat-container {
-    width: 100%;
-    max-width: 600px;
-    background: #1f1f38;
-    border-radius: 15px;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
-    display: flex;
-    flex-direction: column;
-    height: 80vh;
-    overflow: hidden;
-  }
-  #chat {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    scrollbar-width: thin;
-    scrollbar-color: #6a11cb #1f1f38;
-  }
-  #chat::-webkit-scrollbar {
-    width: 8px;
-  }
-  #chat::-webkit-scrollbar-track {
-    background: #1f1f38;
-  }
-  #chat::-webkit-scrollbar-thumb {
-    background-color: #6a11cb;
-    border-radius: 20px;
-  }
-  .message {
-    max-width: 75%;
-    padding: 14px 18px;
-    border-radius: 22px;
-    line-height: 1.5;
-    font-size: 16px;
-    user-select: text;
-    word-wrap: break-word;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInUp 0.3s forwards;
-  }
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat AI Modern</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
     }
-  }
-  .user {
-    align-self: flex-end;
-    background: #6a11cb;
-    color: #fff;
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 22px;
-  }
-  .bot {
-    align-self: flex-start;
-    background: #3a3a6e;
-    color: #ddd;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 22px;
-  }
-  #input-area {
-    display: flex;
-    padding: 15px 20px;
-    background: #161635;
-    border-top: 1px solid #333366;
-    border-radius: 0 0 15px 15px;
-  }
-  #userInput {
-    flex-grow: 1;
-    padding: 14px 18px;
-    font-size: 16px;
-    border-radius: 22px;
-    border: none;
-    outline: none;
-    background: #2a2a60;
-    color: white;
-    transition: background 0.3s;
-  }
-  #userInput::placeholder {
-    color: #bbb;
-  }
-  #userInput:focus {
-    background: #3a3a9e;
-  }
-  #sendBtn {
-    margin-left: 15px;
-    background: #6a11cb;
-    border: none;
-    border-radius: 22px;
-    padding: 0 22px;
-    font-weight: 600;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
-    user-select: none;
-  }
-  #sendBtn:hover:not(:disabled) {
-    background: #520fbf;
-  }
-  #sendBtn:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
 
-  #backHomeBtn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: #ff5c5c;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 22px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  transition: background 0.3s ease;
-}
-#backHomeBtn:hover {
-  background: #e64545;
-}
-</style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .chat-container {
+      width: 95%;
+      max-width: 900px;
+      height: 90vh;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    .chat-header {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 18px 24px;
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .back-button {
+      background: #facc15;
+      color: #1e293b;
+      border: none;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .back-button:hover {
+      background: #fde047;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scrollbar-width: thin;
+    }
+
+    .chat-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-box::-webkit-scrollbar-thumb {
+      background-color: #94a3b8;
+      border-radius: 4px;
+    }
+
+    .chat-message {
+      padding: 14px 18px;
+      border-radius: 16px;
+      max-width: 75%;
+      font-size: 15px;
+      line-height: 1.6;
+      word-break: break-word;
+      position: relative;
+      animation: fadeInUp 0.4s ease;
+    }
+
+    .user-message {
+      align-self: flex-end;
+      background: #3b82f6;
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bot-message {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.15);
+      color: #e0f2fe;
+      border-top-left-radius: 4px;
+    }
+
+    .input-container {
+      display: flex;
+      padding: 16px;
+      background-color: rgba(255,255,255,0.05);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .input-container input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      font-size: 15px;
+      background-color: rgba(255,255,255,0.06);
+      color: #fff;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    .input-container input:focus {
+      border-color: #60a5fa;
+    }
+
+    .input-container input::placeholder {
+      color: #cbd5e1;
+    }
+
+    .input-container button {
+      margin-left: 10px;
+      padding: 12px 18px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.1s;
+    }
+
+    .input-container button:hover {
+      background: #1d4ed8;
+      transform: scale(1.03);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .chat-header {
+        font-size: 16px;
+        padding: 12px 16px;
+      }
+
+      .input-container input {
+        font-size: 14px;
+      }
+
+      .input-container button {
+        padding: 10px 14px;
+        font-size: 14px;
+      }
+    }
+  </style>
+  <script>
+    async function sendRequest() {
+      const userInput = document.getElementById("userInput").value.trim();
+      const chatBox = document.getElementById("chatBox");
+      if (!userInput) return;
+
+      const userMessage = document.createElement("div");
+      userMessage.className = "chat-message user-message";
+      userMessage.textContent = userInput;
+      chatBox.appendChild(userMessage);
+      document.getElementById("userInput").value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      const response = await fetch("https://api.together.xyz/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer tgp_v1_Tc9_HMMKE2Gcv-7e9dg3x0dYlsxOvuTHrewQBtQM4D8",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+          messages: [{ role: "user", content: userInput }]
+        })
+      });
+
+      const data = await response.json();
+      const botMessage = document.createElement("div");
+      botMessage.className = "chat-message bot-message";
+      botMessage.textContent = data.choices?.[0]?.message?.content || "No response.";
+      chatBox.appendChild(botMessage);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function goBack() {
+      window.location.href = "index.html";
+    }
+  </script>
 </head>
 <body>
-    <button id="backHomeBtn" onclick="goBackHome()">⬅ Kembali ke Halaman Utama</button>
-  <div id="chat-container">
-    <div id="chat"></div>
-    <div id="input-area">
-      <input type="text" id="userInput" placeholder="Tanya sesuatu..." autocomplete="off" />
-      <button id="sendBtn" disabled>Kirim</button>
+  <div class="chat-container">
+    <div class="chat-header">
+      <button class="back-button" onclick="goBack()">← Back</button>
+      Chatbot
+      <div style="width: 60px;"></div>
+    </div>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="input-container">
+      <input type="text" id="userInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendRequest()">
+      <button onclick="sendRequest()">Send</button>
     </div>
   </div>
-
-<script>
-  const chat = document.getElementById('chat');
-  const userInput = document.getElementById('userInput');
-  const sendBtn = document.getElementById('sendBtn');
-
-  let lastWasGreeting = false;
-
-  function appendMessage(text, sender) {
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message', sender);
-    msgDiv.textContent = text;
-    chat.appendChild(msgDiv);
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  function evalMathExpression(expr) {
-    try {
-      if (/[^-()\d/*+. ]/.test(expr)) return null;
-      return Function('"use strict";return (' + expr + ')')();
-    } catch {
-      return null;
-    }
-  }
-
-  function randomReply(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
-
-  function isGreeting(msg) {
-    return /^(halo|hai|hi|hey|yo)\b/.test(msg);
-  }
-
-  function getBotReply(message) {
-    const msg = message.toLowerCase().trim();
-
-    const mathRegex = /(?:berapa|hasil|berapa hasil)?\s*([\d\s+\-*/().]+)/i;
-    const matchMath = msg.match(mathRegex);
-    if (matchMath) {
-      const expr = matchMath[1].replace(/\s+/g, '');
-      const result = evalMathExpression(expr);
-      if (result !== null && !isNaN(result)) {
-        lastWasGreeting = false; 
-        const replies = [
-          `Oke, hasil dari ${expr} itu adalah ${result}. Gampang kan?`,
-          `Hasilnya adalah ${result}. Ada soal lain?`,
-          `Sip! Jawabannya ${result}. Mau coba yang lain?`,
-          `Ditunggu ya kalau ada hitungan lagi. Hasilnya ${result}!`,
-          `Matematika memang asyik, jawabannya ${result}.`,
-          `Ini dia hasilnya: ${result}. Semoga membantu!`,
-        ];
-        return randomReply(replies);
-      }
-    }
-
-    if (isGreeting(msg)) {
-      if (lastWasGreeting) {
-        const fallbackReplies = [
-          'Ada yang bisa aku bantu selain sapaan?',
-          'Coba tanya hal lain ya, aku siap membantu.',
-          'Aku di sini untuk bantu, bukan cuma buat bilang halo terus.',
-        ];
-        return randomReply(fallbackReplies);
-      } else {
-        lastWasGreeting = true;
-        const greetingReplies = [
-          'Halo! Ada yang bisa aku bantu?',
-          'Hai, apa kabar? Aku siap menemanimu nih!',
-          'Hey! Lagi pengen ngobrol apa hari ini?',
-          'Hai, senang ketemu kamu lagi!',
-          'Halo, semoga harimu menyenangkan!',
-          'Hey hey! Ada cerita seru hari ini?',
-          'Halo! Apa kabar? Aku di sini buat kamu.',
-          'Hai, ayo ngobrol santai yuk!',
-          'Yo! Siap bantu kamu kapan saja.',
-        ];
-        return randomReply(greetingReplies);
-      }
-    }
-
-    lastWasGreeting = false;
-
-    if (msg.includes('apa kabar')) {
-      return randomReply([
-        'Aku baik-baik aja, makasih sudah tanya! Kamu gimana?',
-        'Sehat dan semangat, siap bantu kamu kapan saja!',
-        'Lagi semangat nih, kamu gimana?',
-        'Aku oke kok, terima kasih. Kamu bagaimana hari ini?',
-        'Baik banget, makasih sudah tanya. Ada cerita seru?',
-        'Sehat selalu, yuk kita ngobrol!',
-        'Alhamdulillah baik. Kamu sendiri gimana?',
-        'Baik-baik saja, semoga kamu juga.',
-        'Makasih sudah nanya, aku lagi semangat nih!',
-      ]);
-    }
-
-return randomReply([
-  'Aku Chatbot, teman ngobrol asikmu yang selalu siap bantu!',
-  'Namaku Chatbot, teman ngobrol dan asisten virtualmu.',
-  'Chatbot di sini! Siap nemenin kamu kapan aja.',
-  'Aku chatbot Chatbot, senang bisa ngobrol denganmu.',
-  'Namaku Chatbot, teman digitalmu yang selalu ada.',
-  'Aku asisten virtual bernama Chatbot, siap membantu.',
-  'Chatbot, chatbot yang siap nemenin kamu kapan pun.',
-  'Aku teman ngobrol kamu, namaku Chatbot!',
-  'Chatbot, si chatbot yang asyik dan penuh semangat!',
-]);
-
-
-    if (msg.includes('terima kasih') || msg.includes('makasih')) {
-      return randomReply([
-        'Sama-sama! Senang bisa membantu.',
-        'Kamu sangat welcome!',
-        'Tidak masalah, aku senang bisa membantu.',
-        'Anytime! Jangan sungkan bertanya lagi ya.',
-        'Senang bisa membantu kamu!',
-        'Terima kasih juga sudah ngobrol denganku.',
-      ]);
-    }
-
-    if (msg.includes('siapa presiden indonesia') || msg.includes('siapa presiden sekarang')) {
-      return 'Presiden Indonesia saat ini adalah Joko Widodo.';
-    }
-
-    if (msg.includes('ibu kota indonesia') || msg.includes('ibu kota negara')) {
-      return 'Ibu kota Indonesia adalah Jakarta.';
-    }
-
-    if (msg === '') {
-      return 'Ketik sesuatu ya, jangan kosong!';
-    }
-
-    
-    return randomReply([
-      'Maaf, aku belum mengerti maksudmu. Coba tanya hal lain ya!',
-      'Hmm, aku kurang paham nih. Bisa dijelaskan lagi?',
-      'Aku masih belajar, coba tanya dengan kata lain ya.',
-      'Ups, aku belum bisa jawab itu. Ada yang lain?',
-      'Aku gak ngerti nih, coba kata lain ya!',
-      'Maaf, aku kurang paham. Mau coba yang lain?',
-    ]);
-  }
-
-  userInput.addEventListener('input', () => {
-    sendBtn.disabled = userInput.value.trim() === '';
-  });
-
-  function sendMessage() {
-    const message = userInput.value.trim();
-    if (message === '') return;
-
-    appendMessage(message, 'user');
-
-    setTimeout(() => {
-      const reply = getBotReply(message);
-      appendMessage(reply, 'bot');
-    }, 500);
-
-    userInput.value = '';
-    sendBtn.disabled = true;
-  }
-
-  sendBtn.addEventListener('click', sendMessage);
-
-  userInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !sendBtn.disabled) {
-      sendMessage();
-    }
-  });
-
-  window.addEventListener('load', () => {
-    appendMessage('Masih tahap pengembangan, rada kolot maklumin -Bagas');
-  });
-</script>
-<script>
-    function goBackHome() {
-  window.location.href = "index.html"; 
-}
-</script>
 </body>
 </html>
